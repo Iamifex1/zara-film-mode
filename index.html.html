@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#080b0e"><title>ZARA — Film Mode</title>
+<style>
+:root{--bg:#080b0e;--fg:#f1f3f1;--muted:#718184;--line:#263337;--mint:#b8d8d1}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif}
+body{overflow:hidden}.app{height:100dvh;min-height:540px;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 22px) 23px calc(env(safe-area-inset-bottom) + 18px);position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 43%,rgba(95,145,143,.1),transparent 37%),var(--bg)}
+header{display:flex;justify-content:space-between;align-items:center}.brand{font-size:14px;font-weight:600;letter-spacing:.28em}.system{font-size:9px;letter-spacing:.19em;color:var(--muted)}
+.stage{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:0}
+.core-wrap{width:min(69vw,285px);aspect-ratio:1;position:relative;display:grid;place-items:center}
+.ring{position:absolute;border:1px solid rgba(145,184,180,.22);border-radius:50%;inset:0}.r2{inset:9%;border-color:rgba(145,184,180,.31);border-style:dashed;animation:rotate 26s linear infinite}.r3{inset:20%;border-color:rgba(145,184,180,.38)}.r4{inset:32%;border-color:rgba(145,184,180,.5);border-style:dotted}
+.orbit{position:absolute;inset:4%;border-radius:50%;animation:rotate 18s linear infinite}.orbit:before,.orbit:after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--mint);box-shadow:0 0 13px rgba(184,216,209,.8);left:50%;top:0;transform:translateX(-50%)}.orbit:after{width:3px;height:3px;top:auto;bottom:0;opacity:.6}
+.core{width:17%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#e0f4ef 0,#b8d8d1 23%,#638c89 58%,rgba(58,91,91,.15) 75%);box-shadow:0 0 24px rgba(153,206,197,.32),0 0 75px rgba(107,170,160,.14);position:relative;z-index:2;transition:transform .3s}
+.core:after{content:"";position:absolute;inset:-70%;border:1px solid rgba(184,216,209,.14);border-radius:50%}
+.listen .r2{animation-duration:5s}.listen .core{transform:scale(1.16);box-shadow:0 0 30px rgba(184,216,209,.55),0 0 90px rgba(107,170,160,.22)}.think .r2{animation-duration:2.5s}.think .r3{animation:rotate 7s linear infinite reverse}.think .core{transform:scale(.82)}.speak .core{animation:pulse .8s ease-in-out infinite}.speak .r4{animation:pulseRing .8s ease-in-out infinite}
+@keyframes rotate{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.28);box-shadow:0 0 38px rgba(184,216,209,.7),0 0 95px rgba(107,170,160,.28)}}@keyframes pulseRing{50%{transform:scale(1.09);opacity:.45}}
+#status{margin-top:36px;font-size:9px;letter-spacing:.28em;color:var(--mint);min-height:14px}.reply{margin-top:24px;min-height:72px;max-width:330px;text-align:center;display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1.42}.sub{margin-top:10px;font-size:10px;letter-spacing:.13em;color:var(--muted);text-align:center;min-height:14px}
+footer{display:flex;flex-direction:column;gap:11px}.progress{height:1px;background:#1c282b}.progress span{height:100%;width:0;display:block;background:var(--mint);transition:width .25s linear}.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+button{border:1px solid var(--line);border-radius:12px;background:#0d1315;color:var(--fg);padding:14px 10px;font-size:10px;letter-spacing:.16em}.primary{background:var(--fg);color:#080b0e;border-color:var(--fg);font-weight:600}
+.note{font-size:9px;line-height:1.5;color:#647276;text-align:center}
+.overlay{position:absolute;inset:0;z-index:5;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:34px;text-align:center}.overlay h1{font-size:25px;letter-spacing:.3em;font-weight:500;margin:0 0 12px}.tag{font-size:9px;letter-spacing:.25em;color:var(--mint);margin-bottom:24px}.overlay p{max-width:290px;color:var(--muted);font-size:12px;line-height:1.7}.overlay button{width:220px;margin-top:27px}
+.memorial{position:absolute;inset:0;z-index:4;background:#080b0e;display:none;flex-direction:column;justify-content:center;padding:48px 29px}.memorial.visible{display:flex}.mem-label{font-size:9px;letter-spacing:.3em;color:var(--muted);margin-bottom:23px}.mem-name{font-size:32px;font-weight:400;letter-spacing:.04em}.mem-years{font-size:12px;letter-spacing:.18em;color:var(--muted);margin-top:8px}.mem-rule{height:1px;background:var(--line);margin:38px 0}.mem-small{font-size:9px;letter-spacing:.25em;color:var(--muted)}.mem-date{font-size:16px;letter-spacing:.08em;margin-top:12px}.mem-foot{margin-top:54px;font-size:9px;letter-spacing:.2em;color:var(--muted)}
+.settings{position:absolute;right:23px;top:calc(env(safe-area-inset-top) + 54px)}.settings button{padding:8px 10px;font-size:8px;color:var(--muted);border-radius:8px}.panel{position:absolute;z-index:6;inset:auto 12px 12px;background:#11191b;border:1px solid var(--line);border-radius:16px;padding:17px;display:none}.panel.open{display:block}.panel label{display:block;font-size:9px;color:var(--muted);letter-spacing:.15em;margin:0 0 8px}.panel select,.panel input{width:100%;background:#080b0e;color:var(--fg);border:1px solid var(--line);border-radius:9px;padding:11px;font-size:12px;margin-bottom:13px}.panel .row{display:flex;gap:8px}.panel .row button{flex:1}
+@media(min-width:600px){.app{width:430px;height:min(900px,100dvh);margin:auto;border-left:1px solid #172023;border-right:1px solid #172023}.overlay,.memorial{width:430px;left:50%;transform:translateX(-50%)}}
+</style></head><body>
+<main class="app" id="app">
+<header><div class="brand">ZARA</div><div class="system">PERSONAL INTELLIGENCE</div></header>
+<div class="settings"><button id="settingsBtn">VOICE SETTINGS</button></div>
+<section class="stage"><div class="core-wrap" id="core"><div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div><div class="ring r4"></div><div class="orbit"></div><div class="core"></div></div><div id="status">SYSTEM READY</div><div class="reply" id="reply">Zara is ready.</div><div class="sub" id="sub">FILM MODE · STANDBY</div></section>
+<footer><div class="progress"><span id="progress"></span></div><div class="controls"><button class="primary" id="play">START SCENE</button><button id="pause">PAUSE</button><button id="next">NEXT CUE</button><button id="reset">RESET</button></div><div class="note">For filming, play Zara through the phone speaker or a hidden speaker. Use the same voice setting for every take.</div></footer>
+<section class="overlay" id="welcome"><div class="tag">A PERSONAL INTELLIGENCE SYSTEM</div><h1>ZARA</h1><p>FILM MODE<br><br>One-tap scripted playback for <em>LAST SEEN</em>. Zara's responses are spoken in sequence. The actress performs to the dialogue and pauses.</p><button class="primary" id="enter">ENTER FILM MODE</button></section>
+<section class="memorial" id="memorial"><div class="mem-label">MEMORIAL RECORD</div><div class="mem-name">DAVID</div><div class="mem-years">2004 — 2026</div><div class="mem-rule"></div><div class="mem-small">LAST SEEN</div><div class="mem-date">31 OCTOBER 2026</div><div class="mem-foot">TAP ANYWHERE TO RETURN</div></section>
+<section class="panel" id="panel"><label for="voice">SYSTEM VOICE</label><select id="voice"></select><label for="rate">SPEECH RATE</label><input id="rate" type="range" min=".75" max="1.05" step=".01" value=".91"><div class="row"><button id="test">TEST VOICE</button><button id="close">CLOSE</button></div></section>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id), core=$('core'),status=$('status'),reply=$('reply'),sub=$('sub'),progress=$('progress'),memorial=$('memorial'),panel=$('panel');
+let voices=[],i=0,timer=null,running=false,paused=false;
+const cues=[
+['g','Okay… how do I tell a guy I like him?',1900],
+['z','You could tell him you like him.',1400],
+['g','Wow. You’re actually useless.',1100],
+['z','Thank you.',800],
+['g','I can’t just say, “I like you.”',1300],
+['z','Why?',500],
+['g','Because it’s embarrassing.',1000],
+['z','You could say, “I am romantically attracted to you.”',1800],
+['g','That sounds like a police statement.',1200],
+['z','Would you prefer Nigerian English?',1100],
+['g','Obviously.',550],
+['z','Abeg, I like you.',1100],
+['g','What if I say… “I think I’m falling for him”?',1600],
+['z','Are you physically falling?',1200],
+['g','No.',450],
+['z','Then why use the word “falling”?',1400],
+['g','Forget it. Wait. What’s today’s date?',1600],
+['z','Thursday, October 31st, 2041.',1700,'date'],
+['g','…2041? Nothing even looks different.',1500],
+['z','Would you prefer flying cars?',1100],
+['g','Okay. What would you say if you were me?',1400],
+['z','I’d tell him.',700],
+['g','That’s easy for you.',900],
+['z','Correct. I have no romantic feelings.',1400],
+['g','What if he rejects me?',1200],
+['z','He can’t.',700],
+['g','Why?',450],
+['z','Because he’s dead.',2400,'death'],
+['g','…what?',900],
+['z','He’s deceased.',1000],
+['g','No. He’s not. Show me what?',1300],
+['z','His memorial page.',900,'memorial'],
+['g','I was going to tell him tomorrow.',1500],
+['z','You said that yesterday.',1800,'end']
+];
+function set(s,t,small){core.className='core-wrap '+({LISTENING:'listen',THINKING:'think',SPEAKING:'speak'}[s]||'');status.textContent=s; if(t!==undefined)reply.textContent=t;if(small)sub.textContent=small}
+function loadVoices(){if(!('speechSynthesis'in window))return;voices=speechSynthesis.getVoices();let sel=$('voice'),old=sel.value;sel.innerHTML='';(voices.filter(v=>/^en/i.test(v.lang)).length?voices.filter(v=>/^en/i.test(v.lang)):voices).forEach(v=>{let o=document.createElement('option');o.value=v.name;o.textContent=v.name+' · '+v.lang;sel.appendChild(o)});if(old)sel.value=old}
+if('speechSynthesis'in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+function voice(){return voices.find(v=>v.name===$('voice').value)||voices.find(v=>/^en/i.test(v.lang))}
+function speak(text,done){set('SPEAKING',text,'ZARA · RESPONDING');if(!('speechSynthesis'in window)){timer=setTimeout(done,1700);return}speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text),v=voice();if(v)u.voice=v;u.rate=Number($('rate').value);u.pitch=.96;u.volume=1;let ended=false,finish=()=>{if(ended)return;ended=true;done()};u.onend=finish;u.onerror=finish;speechSynthesis.speak(u);timer=setTimeout(finish,Math.max(900,text.length*115/u.rate+1300))}
+function show(){if(!running||paused)return;let c=cues[i];progress.style.width=(i/cues.length*100)+'%';if(c[0]==='g'){set('LISTENING',c[1],'GIRL · PERFORMANCE CUE');timer=setTimeout(nextCue,c[2]);}else{set('THINKING','','ZARA · PROCESSING');timer=setTimeout(()=>speak(c[1],()=>{if(c[3]==='date')sub.textContent='DATE CONFIRMED · 31 OCTOBER 2041';if(c[3]==='death')sub.textContent='RECORD MATCH CONFIRMED';if(c[3]==='memorial')memorial.classList.add('visible');if(c[3]==='end'){running=false;$('play').textContent='REPLAY SCENE';progress.style.width='100%';sub.textContent='END OF SCENE';return}nextCue()},350),c[2]);}}
+function nextCue(){if(!running||paused)return;i++;if(i>=cues.length){running=false;return}show()}
+function clear(){clearTimeout(timer);timer=null}
+function start(){clear();if('speechSynthesis'in window)speechSynthesis.cancel();memorial.classList.remove('visible');i=0;running=true;paused=false;$('play').textContent='PLAYING…';show()}
+function pause(){if(!running)return;paused=true;running=false;clear();if('speechSynthesis'in window)speechSynthesis.pause();set('PAUSED',reply.textContent,'TAP RESUME TO CONTINUE');$('play').textContent='RESUME'}
+function resume(){if(!paused)return;paused=false;running=true;if('speechSynthesis'in window&&speechSynthesis.paused){speechSynthesis.resume();return}show()}
+function next(){if(!running&&!paused)return;clear();if('speechSynthesis'in window)speechSynthesis.cancel();paused=false;running=true;i=Math.min(i+1,cues.length-1);show()}
+function reset(){clear();running=false;paused=false;i=0;if('speechSynthesis'in window)speechSynthesis.cancel();memorial.classList.remove('visible');progress.style.width='0%';$('play').textContent='START SCENE';set('READY','Zara is ready.','FILM MODE · STANDBY')}
+$('enter').onclick=()=>{$('welcome').style.display='none';reset()};$('play').onclick=()=>paused?resume():start();$('pause').onclick=pause;$('next').onclick=next;$('reset').onclick=reset;memorial.onclick=()=>memorial.classList.remove('visible');$('settingsBtn').onclick=()=>panel.classList.toggle('open');$('close').onclick=()=>panel.classList.remove('open');$('test').onclick=()=>{if(!('speechSynthesis'in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance('Hello. I am Zara. How can I help you?'),v=voice();if(v)u.voice=v;u.rate=Number($('rate').value);speechSynthesis.speak(u)};reset();
+})();
+</script></body></html>
