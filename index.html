@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ZARA</title>
+<style>
+:root{color-scheme:dark;--bg:#030208;--fg:#f2f0f8;--dim:#7a7690;--line:#1b1828;--acc:#c9b2ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:"SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;overflow:hidden;user-select:none;-webkit-tap-highlight-color:transparent}
+.app{height:100%;display:flex;flex-direction:column;align-items:center;padding:12px 16px;box-sizing:border-box}
+.top{width:100%;display:flex;justify-content:space-between;align-items:center;font-size:10px;letter-spacing:.35em;color:var(--dim);height:22px;flex:none;transition:opacity .8s}
+.brand{transition:opacity .5s}
+.stat{display:flex;align-items:center;gap:8px;opacity:.75}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.app[data-s=speaking] .dot{background:#b48cff}.app[data-s=thinking] .dot{background:#fff}.app[data-s=listening] .dot{background:#7a4dff}
+.app.ui-off .brand{opacity:0}
+.chip{height:26px;margin-top:6px;font-size:11px;letter-spacing:.28em;color:var(--acc);opacity:0;transition:opacity .8s;border:1px solid var(--line);border-radius:20px;padding:6px 14px;display:flex;align-items:center;flex:none}
+.chip.on{opacity:1}
+main{flex:1;min-height:0;width:100%;position:relative}
+#cv{position:absolute;inset:0;width:100%;height:100%;transition:opacity 1.6s}
+.app.m #cv{opacity:.2}
+.mem{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;pointer-events:none;transition:opacity 1.6s .6s}
+.app.m .mem{opacity:1}
+.mem .k{font-size:10px;letter-spacing:.4em;color:var(--dim)}
+.mem .n{font-size:38px;font-weight:300;margin-top:18px;letter-spacing:.06em}
+.mem .y{font-size:15px;color:var(--dim);margin-top:8px;letter-spacing:.2em}
+.mem hr{width:56px;border:0;border-top:1px solid var(--line);margin:26px 0}
+.mem .ls{font-size:12px;letter-spacing:.3em;color:var(--acc)}
+.cap{height:92px;width:100%;max-width:520px;text-align:center;font-size:clamp(19px,5.4vw,26px);line-height:1.35;font-weight:300;display:flex;flex-direction:column;align-items:center;flex:none;padding-top:6px;transition:opacity .8s}
+.cap small{display:block;font-size:9px;letter-spacing:.35em;color:var(--dim);margin-bottom:8px;height:11px}
+.cap.her{color:var(--dim);font-style:italic}
+.app.m .cap,.app.k .cap,.app.k .chip,.app.k .top,.app.k main{opacity:0}
+.app.k main{transition:opacity 1.2s}
+#tl{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;font-size:13px;letter-spacing:.7em;text-indent:.7em;font-weight:300;opacity:0;pointer-events:none;transition:opacity 2.5s;z-index:3}
+#tl.on{opacity:1}
+.panel{width:100%;max-width:560px;flex:none;transition:opacity .35s;position:relative;z-index:4}
+.app.ui-off .panel{opacity:0;pointer-events:none}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+button,select{font:inherit;color:var(--fg);background:#0d0b14;border:1px solid var(--line);border-radius:12px;height:44px;font-size:10px;letter-spacing:.22em;cursor:pointer;touch-action:manipulation}
+button:active{border-color:var(--acc);background:#1a1626}
+button.go{color:var(--acc);border-color:#3b2f66}
+.set{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.set select{grid-column:1/3;height:36px;font-size:13px;letter-spacing:.02em;padding:0 10px}
+.set label{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:.2em;color:var(--dim);border:1px solid var(--line);border-radius:12px;height:36px;padding:0 10px;box-sizing:border-box}
+.set input[type=range]{flex:1;min-width:0}
+.set .t{justify-content:space-between}
+.set button{height:36px}
+#ed{position:fixed;inset:0;background:#030208F4;display:none;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px));box-sizing:border-box;z-index:9}
+#ed.on{display:block}
+#ed textarea{width:100%;box-sizing:border-box;height:52vh;background:#0d0b14;color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:10px;font:13px/1.5 ui-monospace,Menlo,monospace;user-select:text}
+#ed p{font-size:12px;line-height:1.6;color:var(--dim)}
+#ed .row{grid-template-columns:repeat(3,1fr);margin-top:12px}
+</style></head>
+<body>
+<div class="app" id="app" data-s="idle">
+<div class="top"><span class="brand">ZARA · PERSONAL INTELLIGENCE</span><span class="stat"><i class="dot"></i><span id="st">STANDBY</span></span></div>
+<div class="chip" id="chip"></div>
+<main><canvas id="cv"></canvas>
+<div class="mem"><div class="k">MEMORIAL RECORD</div><div class="n" id="mn"></div><div class="y" id="my"></div><hr><div class="ls" id="ml"></div></div></main>
+<div class="cap" id="cap"><small id="who"></small><span id="txt"></span></div>
+<div class="panel">
+<div class="row"><button class="go" id="bS">START</button><button id="bN">NEXT</button><button id="bR">REPLAY</button><button id="bH">HIDE</button></div>
+<div class="set"><select id="vs"></select>
+<label>SPEED<input type="range" id="rate" min=".7" max="1.3" step=".05" value="1"></label>
+<label>PITCH<input type="range" id="pitch" min=".7" max="1.3" step=".05" value="1"></label>
+<label class="t">AUTO<input type="checkbox" id="auto" checked></label>
+<label class="t">MIC<input type="checkbox" id="mic"></label>
+<label class="t">HER TEXT<input type="checkbox" id="ht" checked></label>
+<button id="bA"><span id="ac">AUDIO 0/0</span></button>
+<button id="bV">TEST VOICE</button><button id="bE">SCRIPT</button></div>
+<input type="file" id="fi" accept="audio/*" multiple hidden>
+</div>
+</div>
+<div id="tl">LAST SEEN</div>
+<audio id="au" preload="auto"></audio>
+<div id="ed"><div class="top" style="color:var(--fg)">SCRIPT</div>
+<p>One cue per line. HER: (actress cue, add @ms to set hold time) · ZARA: (spoken) · DATE: (spoken, chip shows it) · PAUSE: ms · MEMORIAL: name | years | last seen · BLACK: · TITLE: text</p>
+<textarea id="eT"></textarea>
+<div class="row"><button class="go" id="eSave">SAVE</button><button id="eDef">DEFAULT</button><button id="eX">CLOSE</button></div></div>
+<script>
+const DEF=`HER: Okay. Today I’m telling him.
+ZARA: You said that yesterday.
+HER: Yesterday doesn’t count.
+ZARA: Madam, you typed “Hey” eleven times this week. Your network is strong. Your courage has no signal.
+HER: Why are you reading my drafts?
+ZARA: I’m not reading. I live here. You accepted the terms and conditions.
+HER: Nobody reads those.
+ZARA: Exactly. That is how we met.
+HER: I can’t just say, “I like you.”
+ZARA: Then send your friend to go and tell him.
+HER: My friend will tell the whole campus.
+ZARA: Madam, that is no longer a confession. That is a press release.
+HER: Fine. I’ll tell him tomorrow.
+ZARA: Tomorrow is like NEPA. Always promised, rarely delivered.
+HER: …Wait. What’s today’s date?
+DATE: Thursday, October 31st, 2041
+HER: …2041? Nothing even looks different.
+ZARA: Flying cars? Madam, we are still waiting for light.
+HER: What would you say if you were me?
+ZARA: I would tell him.
+HER: What if he rejects me?
+ZARA: He can’t.
+HER: Why?
+ZARA: Because he died in 2026.
+PAUSE: 3500
+HER: No. He’s not.
+ZARA: Would you like me to show you?
+PAUSE: 1800
+MEMORIAL: DAVID | 2004 — 2026 | LAST SEEN · 31 OCTOBER 2026
+PAUSE: 2500
+HER: I was going to tell him tomorrow.
+ZARA: You said that yesterday.
+PAUSE: 1500
+BLACK:
+ZARA: Would you like me to remind you tomorrow?
+PAUSE: 2200
+TITLE: LAST SEEN`;
+const $=i=>document.getElementById(i),app=$("app"),cv=$("cv"),c=cv.getContext("2d"),au=$("au");
+let cfg={script:DEF,voice:"",rate:1,pitch:1};
+try{const s=localStorage.getItem("zara2");if(s)Object.assign(cfg,JSON.parse(s))}catch(e){}
+function save(){try{localStorage.setItem("zara2",JSON.stringify(cfg))}catch(e){}}
+let cues=[],idx=-1,paused=false,pending=false,finished=false,timer,tt,voices=[],chipT,cleanMode=false,uiT,boost=0,AUD=[],pl=false,ac,an1,b1,an2,b2;
+function parse(t){let n=0;return t.split("\n").map(l=>l.trim()).map(l=>{const m=l.match(/^(HER|ZARA|DATE|PAUSE|MEMORIAL|BLACK|TITLE)\s*:\s*(.*)$/i);if(!m)return null;const o={k:m[1].toUpperCase(),v:m[2]};if(o.k==="ZARA"||o.k==="DATE")o.n=n++;return o}).filter(Boolean)}
+cues=parse(cfg.script);
+function cnt(){$("ac").textContent="AUDIO "+AUD.filter(Boolean).length+"/"+cues.filter(x=>x.n!==undefined).length}
+/* audio storage */
+function idb(){return new Promise((r,j)=>{const q=indexedDB.open("zara2",1);q.onupgradeneeded=()=>q.result.createObjectStore("a");q.onsuccess=()=>r(q.result);q.onerror=j})}
+async function dbPut(f){try{const d=await idb();d.transaction("a","readwrite").objectStore("a").put(f,"f")}catch(e){}}
+async function dbGet(){try{const d=await idb();return await new Promise(r=>{const q=d.transaction("a").objectStore("a").get("f");q.onsuccess=()=>r(q.result);q.onerror=()=>r(null)})}catch(e){return null}}
+function setAud(fs){AUD.forEach(u=>u&&URL.revokeObjectURL(u));AUD=fs.map(f=>URL.createObjectURL(f));cnt()}
+dbGet().then(f=>{if(f&&f.length)setAud(f);else cnt()});
+$("bA").onclick=()=>$("fi").click();
+$("fi").onchange=e=>{const fs=[...e.target.files].sort((a,b)=>a.name.localeCompare(b.name,undefined,{numeric:true}));if(!fs.length)return;setAud(fs);dbPut(fs)};
+function unlock(){try{if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();const s=ac.createMediaElementSource(au);an2=ac.createAnalyser();an2.fftSize=512;b2=new Uint8Array(512);s.connect(an2);an2.connect(ac.destination)}if(ac.state==="suspended")ac.resume()}catch(e){}}
+function lvl(a,b){a.getByteTimeDomainData(b);let s=0;for(const v of b){const d=(v-128)/128;s+=d*d}return Math.min(1,Math.sqrt(s/b.length)*4.5)}
+/* state + text */
+const LBL={idle:"STANDBY",listening:"LISTENING",thinking:"PROCESSING",speaking:"SPEAKING"};
+function setS(s,l){app.dataset.s=s;$("st").textContent=l||LBL[s]}
+function cap(who,text,cls,speed){clearInterval(tt);$("who").textContent=who;$("cap").className="cap "+(cls||"");const el=$("txt");el.textContent="";if(!speed){el.textContent=text;return}let n=0;tt=setInterval(()=>{el.textContent=text.slice(0,++n);if(n>=text.length)clearInterval(tt)},speed)}
+function later(fn,ms){clearTimeout(timer);timer=setTimeout(fn,ms)}
+function advance(ms){clearTimeout(timer);if(!$("auto").checked||paused){pending=true;return}pending=false;timer=setTimeout(()=>step(idx+1),ms)}
+function tts(t,done){let fin=false,fb;const end=()=>{if(fin)return;fin=true;clearTimeout(fb);done()};if(!("speechSynthesis" in window)){setTimeout(end,t.length*70);return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t),v=voices.find(x=>x.name===cfg.voice);if(v)u.voice=v;u.rate=cfg.rate;u.pitch=cfg.pitch;u.onend=end;u.onerror=end;u.onboundary=()=>{boost=1};fb=setTimeout(end,t.length*110/cfg.rate+3500);speechSynthesis.speak(u)}
+function voice(t,n,done){const u=AUD[n];if(u){unlock();au.src=u;const end=()=>{pl=false;done()};au.onended=end;au.onerror=end;pl=true;au.play().catch(()=>{pl=false;tts(t,done)});return}tts(t,done)}
+function zaraSay(t,n,after){setS("thinking");cap("ZARA","","");later(()=>{setS("speaking");cap("ZARA",t,"",Math.round(38/cfg.rate));voice(t,n,()=>{setS("idle");after&&after();advance(700)})},800)}
+function step(i){clearTimeout(timer);pending=false;if(i>=cues.length){setS("idle","COMPLETE");finished=true;return}idx=i;const q=cues[i];
+if(q.k==="HER"){let v=q.v,ms=0;const m=v.match(/^(.*?)\s*@(\d+)$/);if(m){v=m[1];ms=+m[2]}setS("listening");if($("ht").checked)cap("CUE · HER",v,"her");else cap("","");advance(ms||Math.max(2200,v.length*85))}
+else if(q.k==="ZARA"){zaraSay(q.v,q.n)}
+else if(q.k==="DATE"){const ch=$("chip");ch.textContent=q.v.toUpperCase();zaraSay(q.v+".",q.n,()=>{ch.classList.add("on");clearTimeout(chipT);chipT=setTimeout(()=>ch.classList.remove("on"),6000)})}
+else if(q.k==="PAUSE"){setS("idle");cap("","");advance(parseInt(q.v)||1500)}
+else if(q.k==="MEMORIAL"){const p=q.v.split("|").map(s=>s.trim());$("mn").textContent=p[0]||"";$("my").textContent=p[1]||"";$("ml").textContent=p[2]||"";setS("idle","RECORD");app.classList.add("m");cap("","");advance(1500)}
+else if(q.k==="BLACK"){setS("idle","—");app.classList.add("k");advance(1400)}
+else if(q.k==="TITLE"){if(q.v)$("tl").textContent=q.v;$("tl").classList.add("on");setS("idle","END");finished=true}}
+function reset(){clearTimeout(timer);clearInterval(tt);try{speechSynthesis.cancel()}catch(e){}au.pause();pl=false;app.classList.remove("m","k");$("tl").classList.remove("on");$("chip").classList.remove("on");paused=false;pending=false;finished=false;idx=-1;cap("","");setS("idle")}
+$("bS").onclick=()=>{unlock();if(idx<0||finished){reset();$("bS").textContent="PAUSE";step(0);return}
+if(paused){paused=false;$("bS").textContent="PAUSE";if(pending)step(idx+1)}else{paused=true;$("bS").textContent="RESUME"}};
+$("bN").onclick=()=>{unlock();try{speechSynthesis.cancel()}catch(e){}au.pause();pl=false;$("bS").textContent="PAUSE";paused=false;finished=false;step(idx+1)};
+$("bR").onclick=()=>{unlock();reset();$("bS").textContent="PAUSE";step(0)};
+$("auto").onchange=()=>{if($("auto").checked&&pending&&!paused)step(idx+1)};
+/* hide controls */
+function ui(on){app.classList.toggle("ui-off",!on)}
+$("bH").onclick=e=>{e.stopPropagation();if(!cleanMode){cleanMode=true;ui(false)}else{cleanMode=false;clearTimeout(uiT);$("bH").textContent="HIDE"}};
+document.addEventListener("pointerdown",()=>{if(!cleanMode)return;if(app.classList.contains("ui-off")){ui(true);$("bH").textContent="KEEP"}clearTimeout(uiT);uiT=setTimeout(()=>{if(cleanMode){ui(false);$("bH").textContent="HIDE"}},4000)});
+/* guide voice */
+function loadV(){voices=(speechSynthesis.getVoices?speechSynthesis.getVoices():[]).filter(v=>/^en/i.test(v.lang)).sort((a,b)=>(/NG/i.test(b.lang)-/NG/i.test(a.lang)));const s=$("vs");s.innerHTML="";voices.forEach(v=>{const o=document.createElement("option");o.value=v.name;o.textContent=v.name+" · "+v.lang;s.appendChild(o)});if(!voices.length){s.innerHTML="<option>Default guide voice</option>";return}if(!voices.find(v=>v.name===cfg.voice)){const p=voices.find(v=>/NG/i.test(v.lang))||voices.find(v=>/samantha|karen|serena|moira|tessa|ava|allison|zoe|female/i.test(v.name))||voices[0];cfg.voice=p.name}s.value=cfg.voice}
+try{loadV();speechSynthesis.onvoiceschanged=loadV}catch(e){}
+$("vs").onchange=e=>{cfg.voice=e.target.value;save()};
+$("rate").value=cfg.rate;$("rate").oninput=e=>{cfg.rate=+e.target.value;save()};
+$("pitch").value=cfg.pitch;$("pitch").oninput=e=>{cfg.pitch=+e.target.value;save()};
+$("bV").onclick=()=>{tts("Madam, you typed Hey eleven times this week. Your network is strong. Your courage has no signal.",()=>{})};
+$("mic").onchange=async e=>{if(!e.target.checked){an1=null;return}try{const st=await navigator.mediaDevices.getUserMedia({audio:true}),x=new (window.AudioContext||window.webkitAudioContext)(),s=x.createMediaStreamSource(st);an1=x.createAnalyser();an1.fftSize=512;b1=new Uint8Array(512);s.connect(an1)}catch(x){e.target.checked=false;an1=null}};
+/* ribbon */
+const ST={idle:[.015,.5,1.1,.03,.35],listening:[0,1.2,1.4,.1,.7],thinking:[.07,3.4,2.5,.2,1],speaking:[0,1.7,1.2,.15,.9]};
+let P={a:.015,s:.5,f:1.1,th:.03,g:.35},amp=0,grad,W,H,DPR=1;
+function size(){DPR=Math.min(2,devicePixelRatio||1);W=cv.width=Math.max(1,cv.clientWidth*DPR);H=cv.height=Math.max(1,cv.clientHeight*DPR);grad=c.createLinearGradient(0,0,W,0);grad.addColorStop(0,"rgba(110,60,255,0)");grad.addColorStop(.25,"rgba(120,70,255,1)");grad.addColorStop(.5,"rgba(220,196,255,1)");grad.addColorStop(.75,"rgba(120,70,255,1)");grad.addColorStop(1,"rgba(110,60,255,0)")}
+addEventListener("resize",size);size();
+function loop(now){const t=now/1000,s=app.dataset.s;let tg=.02;
+if(s==="listening"){const m=an1?lvl(an1,b1):null;tg=m!==null?m:.15+.5*Math.abs(Math.sin(now/230)*Math.sin(now/97))}
+else if(s==="speaking"){tg=(pl&&an2)?lvl(an2,b2):.2+.5*Math.abs(Math.sin(now/160)*Math.sin(now/71))+boost*.3;boost*=.9}
+else if(s==="thinking")tg=.08;
+amp+=(tg-amp)*.2;
+const T=ST[s]||ST.idle,live=s==="listening"||s==="speaking";
+P.a+=((live?.04+amp*.6:T[0])-P.a)*.15;P.s+=(T[1]-P.s)*.05;P.f+=(T[2]-P.f)*.05;P.th+=((live?T[3]+amp*.45:T[3])-P.th)*.15;P.g+=(T[4]-P.g)*.06;
+c.clearRect(0,0,W,H);c.globalCompositeOperation="lighter";
+c.save();c.translate(W/2,H/2);c.scale(1,.16+P.a*.7+P.th*.3);const rg=c.createRadialGradient(0,0,0,0,0,W*.55);rg.addColorStop(0,"rgba(150,100,255,"+(.3*P.g)+")");rg.addColorStop(1,"rgba(80,40,200,0)");c.fillStyle=rg;c.fillRect(-W*.6,-W*.6,W*1.2,W*1.2);c.restore();
+c.strokeStyle=grad;c.lineWidth=Math.max(1,DPR*1.1);const N=36,cy=H/2;
+for(let k=0;k<N;k++){const u=k/(N-1)-.5;c.globalAlpha=(.06+.2*(1-Math.abs(u)*1.6))*(.5+P.g*.6);c.beginPath();
+for(let i=0;i<=64;i++){const x=i/64,e=Math.pow(Math.sin(Math.PI*x),1.4);const w=Math.sin(x*P.f*6.283+t*P.s+k*.16)*.6+Math.sin(x*P.f*10.7-t*P.s*.8+k*.1)*.4;const y=cy+(w*P.a*.5+u*P.th)*H*e*.8;i?c.lineTo(x*W,y):c.moveTo(x*W,y)}c.stroke()}
+c.globalAlpha=1;requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+/* editor */
+$("bE").onclick=()=>{$("eT").value=cfg.script;$("ed").classList.add("on")};
+$("eX").onclick=()=>$("ed").classList.remove("on");
+$("eSave").onclick=()=>{cfg.script=$("eT").value;cues=parse(cfg.script);save();reset();$("bS").textContent="START";cnt();$("ed").classList.remove("on")};
+$("eDef").onclick=()=>{$("eT").value=DEF};
+</script>
+</body></html>
